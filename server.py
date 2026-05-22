@@ -7,6 +7,7 @@ import urllib.parse
 from datetime import datetime, timedelta
 import certifi
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 _SSL_CTX = ssl.create_default_context(cafile=certifi.where())
 
@@ -285,6 +286,9 @@ if __name__ == "__main__":
         port = int(os.environ.get("PORT", 8000))
         mcp.settings.host = "0.0.0.0"
         mcp.settings.port = port
+        mcp.settings.transport_security = TransportSecuritySettings(
+            enable_dns_rebinding_protection=False
+        )
         mcp.run(transport="streamable-http" if transport == "http" else "sse")
     else:
         mcp.run()
