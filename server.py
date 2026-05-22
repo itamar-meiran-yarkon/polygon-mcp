@@ -281,8 +281,10 @@ def get_dividends(ticker: str, limit: int = 10) -> str:
 
 if __name__ == "__main__":
     transport = os.environ.get("MCP_TRANSPORT", "stdio")
-    if transport == "http":
+    if transport in ("http", "sse"):
         port = int(os.environ.get("PORT", 8000))
-        mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
+        mcp.settings.host = "0.0.0.0"
+        mcp.settings.port = port
+        mcp.run(transport="streamable-http" if transport == "http" else "sse")
     else:
         mcp.run()
